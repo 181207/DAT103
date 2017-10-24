@@ -52,33 +52,42 @@ _start:
     mov ebx,ecx ; andre tall/siffer lagres i reg ebx
 
     call nylinje
-    add eax,ebx
-    mov ecx,eax
+    add eax,ebx ; resultat i eax
+    mov ecx,eax ; resultat i ecx
     call skrivsiffer ; Skriv ut verdi i ecx som ensifret tall
 
-Slutt: 
+Slutt:
     mov eax,SYS_EXIT
     mov ebx,0
     int 80h
-
 ; ---------------------------------------------------------
 skrivsiffer:
     ; Skriver ut sifferet lagret i ecx. Ingen sjekk på verdiområde.
-    push eax
-    push ebx
-    push ecx
-    push edx
-    add ecx,'0' ; converter tall til ascii.
-    mov [siffer],ecx
+
+    mov edx, 0 ; rest havner her
+    mov eax, ecx ; tall som skal deles
+    mov ebx, 10 ; 10 som divisor
+    div ebx ; deler eax med ebx
+    push edx ; lagrer rest
+    add eax, '0' ; Konverterer til ascii
+    mov [siffer], eax
+
+    mov ecx, siffer
+    mov edx,1
+    mov ebx,STDOUT
+    mov eax,SYS_WRITE
+    int 80h
+
+    pop edx ; henter resten
+    add edx, '0'
+    mov [siffer], edx
+
     mov ecx,siffer
     mov edx,1
     mov ebx,STDOUT
     mov eax,SYS_WRITE
     int 80h
-    push edx
-    push ecx
-    push ebx
-    push eax
+
     ret
 
 ; ---------------------------------------------------------
@@ -119,7 +128,7 @@ Feil:
 
 ; ---------------------------------------------------------
 ; Flytt cursor helt til venstre på neste linje
-nylinje: 
+nylinje:
     push eax
     push ebx
     push ecx

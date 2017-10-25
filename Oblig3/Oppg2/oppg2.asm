@@ -64,7 +64,7 @@ Slutt:
 skrivsiffer:
     ; Skriver ut sifferet lagret i ecx. Ingen sjekk på verdiområde.
 
-    mov edx, 0 ; rest havner her
+    ;  rest havner i edx, 
     mov eax, ecx ; tall som skal deles
     mov ebx, 10 ; 10 som divisor
     div ebx ; deler eax med ebx
